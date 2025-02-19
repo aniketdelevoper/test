@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeraBox M3U8 Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        video {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>TeraBox M3U8 Extractor</h2>
+    <input type="text" id="url" placeholder="Enter TeraBox share link" />
+    <button onclick="extractM3U8()">Get M3U8 Link</button>
+    <p id="m3u8-link"></p>
+    <video id="videoPlayer" controls></video>
+
+    <script>
+        function extractM3U8() {
+            const url = document.getElementById('url').value;
+            if (!url) {
+                alert('Please enter a TeraBox link');
+                return;
+            }
+            
+            fetch(`https://polyester-sparkly-push.glitch.me/api/extract?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.m3u8) {
+                        document.getElementById('m3u8-link').innerHTML = `<a href="${data.m3u8}" target="_blank">${data.m3u8}</a>`;
+                        const videoPlayer = document.getElementById('videoPlayer');
+                        videoPlayer.src = data.m3u8;
+                        videoPlayer.style.display = 'block';
+                    } else {
+                        document.getElementById('m3u8-link').innerText = 'Failed to extract M3U8 link';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('m3u8-link').innerText = 'Error fetching data';
+                });
+        }
+    </script>
+</body>
+</html>
